@@ -1,4 +1,4 @@
-/* # */import "@preview/arkheion:0.1.0": arkheion, arkheion-appendices
+ #import "@preview/arkheion:0.1.0": arkheion, arkheion-appendices
 
 #show: arkheion.with(
   title: "Computational Geometry (2025) Theory Questions 2",
