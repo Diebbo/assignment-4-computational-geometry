@@ -1,4 +1,5 @@
- #import "@preview/arkheion:0.1.0": arkheion, arkheion-appendices
+#import "@preview/arkheion:0.1.0": arkheion, arkheion-appendices
+
 
 #show: arkheion.with(
   title: "Computational Geometry (2025) Theory Questions 2",
@@ -19,8 +20,9 @@
 
 #line(length: 100%)
 
-#include "./chapters/task1.typ"
-// #include "task2.typ"
-#include "./chapters/task3.typ"
-//
-// #include "task4.typ"
+#include "chapters/task1.typ"
+#include "chapters/task2.typ"
+#include "chapters/task3.typ"
+#include "chapters/task4.typ"
+#include "chapters/task5.typ"
+
