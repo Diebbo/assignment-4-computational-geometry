@@ -19,6 +19,7 @@
 #show link: underline
 
 #line(length: 100%)
+#outline()
 
 #include "chapters/task1.typ"
 #include "chapters/task2.typ"
