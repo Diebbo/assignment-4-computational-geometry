@@ -1,18 +1,32 @@
 #import "@preview/cetz:0.4.2": canvas, draw
 #import "@preview/cetz-plot:0.1.3": plot
 
-= Questions
-Given a set $P$ of $n$ points in the plane, each associated with a weight ($w(p_i))$), and a line $ell$, find the point with the maximum weight above the line.
+= Weighted Point-Line Query via Dual Space
 
-Idea:
-- map to the dual space. $p_i : (x_p, y_p) -> p* : y = x_p x - y_p$ and $ell : y = m x + b -> ell* : (m, -b)$
-- in the dual space, the problem becomes finding the line with the maximum weight above the point $ell*$
-- introducing the concept of _useless_ intervals.
+== Problem Statement
 
-Precomputing phase (time unbounded):
-- sort the lines by weight in decreasing order
-  - why? we can discard every line (or portion of line) that is covered by a line with higher weight.
-- for each line intersection, compute the _useless_ interval, and discard them from the arrangement of lines (this will reduce the expected number of lines intersection).
+*Input:* A set $P = {p_1, p_2, ..., p_n}$ of $n$ points in $bb(R)^2$, where each point $p_i = (x_i, y_i)$ has an associated weight $w(p_i) in bb(R)$, and a query line $ell$.
+
+*Output:* The point $p^* in P$ with maximum weight among all points lying above the line $ell$.
+
+== Geometric Duality Transform
+
+We use the standard point-line duality to transform the problem into dual space: 
+- $p_i = (x_p, y_p) --> p_i^* : y = x_p x - y_p$.
+
+- $ell : y = m x + b --> ell^* = (m, -b)$.
+
+We also recall the Duality property that states: A primal point $p$ lies above a primal line $ell$ if and only if the dual point $ell^*$ lies above the dual line $p^*$.
+
+Therefore, the problem transforms to: find the dual line $p_i^*$ with maximum weight $w(p_i)$ such that the dual point $ell^*$ lies above $p_i^*$.
+
+== Useless Intervals
+
+*Definition:* Given two lines $ell_i, ell_j$ with weights $w_i > w_j$, an interval $I subset.eq bb(R)$ is *useless* for line $ell_j$ if $ell_i(x) > ell_j(x)$ for all $x in I$.
+
+*Observation:* If lines are sorted by decreasing weight, any portion of a line $ell_j$ that lies below a higher-weight line $ell_i$ (where $i < j$) can be discarded, as it will never contribute to the maximum weight query.
+
+Consider two incident lines $ell_1$ and $ell_2$ with $w(ell_1) > w(ell_2)$ that intersect at point $(x_0, y_0)$. The line $ell_2$ has a useless interval $[-inf, x_0)$ if it lies below $ell_1$ (see @fig:useless-interval).
 
 #figure(
   caption: "Two incident lines with useless intervals",
@@ -39,12 +53,13 @@ canvas({
       // First incident line: y = mx + q (solid before intersection, dotted after)
       plot.add(
         style: (stroke: green + 1.5pt),
-        label: $y = #m x + #q$,
+        label: "l2",
         domain: (x-intersect, 8),
         x => m * x + q,
       )
       plot.add(
         style: (stroke: (paint: green, thickness: 1.5pt, dash: "dotted")),
+        label: "l2 useless",
         domain: (-8, x-intersect),
         x => m * x + q,
       )
@@ -57,7 +72,7 @@ canvas({
       plot.add(
         style: (stroke: purple + 1.5pt),
         domain: (-8, 8),
-        label: $y = #(-m) x + #q-prime$,
+        label: "l1",
         x => -m * x + q-prime,
       )
     },
@@ -65,13 +80,38 @@ canvas({
 })
 )<fig:useless-interval>
 
-- Given this notion we can compute a lower envelope of the lines, discarding useless intervals.
-- Finally, we can query the lower envelope with the point $ell*$ to find the line with maximum weight above it.
+== Upper Envelope Construction
 
+*Definition:* The *Upper Envelope* $cal(E)$ of a set of lines ${ell_1^*, ell_2^*, ..., ell_n^*}$ is the pointwise maximum function:
+$ cal(E)(x) = max_(i=1,...,n) ell_i^*(x) $
 
+After removing useless intervals, the Upper Envelope consists of a sequence of line segments from different lines, forming a piecewise-linear, convex function.
+
+*Proposition:* Given $n$ lines sorted by decreasing weight, the Upper Envelope after removing useless intervals contains $O(n)$ vertices (intersection points).
+
+*Proof sketch:* Each line appears at most once in the Upper Envelope because we process lines in order of decreasing weight. A line $ell_i$ can only dominate (lie above) lines with higher weight. Once a line enters the envelope, it remains until intersected by another line of lower weight. Since each line contributes at most one contiguous segment, there are at most $n-1$ transition points between segments. $square$
+
+== Query Algorithm
+
+*Preprocessing phase:*
+1. Sort lines ${ell_1^*, ..., ell_n^*}$ by decreasing weight: $w(ell_1) gt.eq w(ell_2) gt.eq ... gt.eq w(ell_n)$
+2. Compute all pairwise intersections between consecutive lines in the sorted order
+3. For each intersection, identify and remove useless intervals
+4. Construct the Upper Envelope $cal(E)$ from the remaining active segments
+5. Build a Binary Space Partition (BSP) tree on the $O(n)$ vertices of $cal(E)$
+
+*Query phase:*
+Given a query point $ell^* = (m, -b)$:
+1. Use the BSP tree to locate the slab (region) containing $x$-coordinate $m$ in $O(log n)$ time
+2. Evaluate which line segment of $cal(E)$ is active at $x = m$
+3. Return the weight associated with that line segment
+
+*Complexity:* 
+- Preprocessing: $O(n log n)$ for sorting, $O(n)$ for envelope construction
+- Query: $O(log n)$ per query
 
 #figure(
-  caption: "Lower envelope of multiple lines",
+  caption: "Upper Envelope of multiple lines",
   canvas({
     draw.set-style(axes: (
       y: (label: (offset: 1), mark: (end: "stealth", fill: black)),
@@ -88,7 +128,7 @@ canvas({
       y-min:-2,
 axis-style: "school-book",
     {
-        // Define the 4 points on the lower envelope
+        // Define the 4 points on the Upper Envelope
         let p1 = (0, 8)
         let p2 = (3, 3)
         let p3 = (5, 4)
@@ -133,7 +173,7 @@ axis-style: "school-book",
           x => m3 * x + q3,
         )
         
-        // Draw the lower envelope segments as thick solid lines
+        // Draw the Upper Envelope segments as thick solid lines
         // Segment 1: from p1 to p2
         plot.add(
           style: (stroke: blue + 2.5pt),
@@ -158,9 +198,3 @@ axis-style: "school-book",
     )
   })
 )
-
-Given a Binary Space Partitioning (BSP) of the lines, we can find the region where the point lies in $O(log n)$ time, and once we have the region, moreover the weight associated.
-
-What's the total number of intersections? Because we are discarding every time half of the lines, the total number of intersections of points on the lower envelope is $O(n)$, because I'm taking each line at most once.
-
-The only problem that remains is: given a slab, how to efficiently find the 
