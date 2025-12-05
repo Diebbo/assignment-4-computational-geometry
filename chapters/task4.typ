@@ -11,7 +11,7 @@
 
 == Geometric Duality Transform
 
-We use the standard point-line duality to transform the problem into dual space: 
+We use the standard point-line duality to transform the problem into dual space:
 - $p_i = (x_p, y_p) --> p_i^* : y = x_p x - y_p$.
 
 - $ell : y = m x + b --> ell^* = (m, -b)$.
@@ -49,7 +49,7 @@ canvas({
       let m = 1
       let q = -1
       let x-intersect = 4  // Adjust this to set where the lines cross
-      
+
       // First incident line: y = mx + q (solid before intersection, dotted after)
       plot.add(
         style: (stroke: green + 1.5pt),
@@ -63,12 +63,12 @@ canvas({
         domain: (-8, x-intersect),
         x => m * x + q,
       )
-      
+
       // Second incident line: y = -mx + q' (solid throughout)
       // Calculate q' so the lines intersect at x-intersect
       let y-intersect = m * x-intersect + q
       let q-prime = y-intersect + m * x-intersect
-      
+
       plot.add(
         style: (stroke: purple + 1.5pt),
         domain: (-8, 8),
@@ -106,7 +106,7 @@ Given a query point $ell^* = (m, -b)$:
 2. Evaluate which line segment of $cal(E)$ is active at $x = m$
 3. Return the weight associated with that line segment
 
-*Complexity:* 
+*Complexity:*
 - Preprocessing: $O(n log n)$ for sorting, $O(n)$ for envelope construction
 - Query: $O(log n)$ per query
 
@@ -133,21 +133,21 @@ axis-style: "school-book",
         let p2 = (3, 3)
         let p3 = (5, 4)
         let p4 = (7, 8)
-        
+
         // Calculate line parameters (y = mx + q) for each segment
         // Line 1: through p1 and p2
-        let m1 = (p2.at(1) - p1.at(1)) / (p2.at(0) - p1.at(0))  
+        let m1 = (p2.at(1) - p1.at(1)) / (p2.at(0) - p1.at(0))
         let q1 = p1.at(1) - m1 * p1.at(0)  // 5 - 1*1 = 4
 
-        let m2 = (p3.at(1) - p2.at(1)) / (p3.at(0) - p2.at(0)) 
-        let q2 = p2.at(1) - m2 * p2.at(0)  
-        
+        let m2 = (p3.at(1) - p2.at(1)) / (p3.at(0) - p2.at(0))
+        let q2 = p2.at(1) - m2 * p2.at(0)
+
         // Line 3: through p3 and p4
-        let m3 = (p4.at(1) - p3.at(1)) / (p4.at(0) - p3.at(0))  
-        let q3 = p3.at(1) - m3 * p3.at(0)  
+        let m3 = (p4.at(1) - p3.at(1)) / (p4.at(0) - p3.at(0))
+        let q3 = p3.at(1) - m3 * p3.at(0)
         /* x coordinate of intersection between l1 and l3 */
         let int_blue_green = (q3 - q1) / (m1 - m3)
-        
+
 
         // Draw complete lines as dotted (full extent)
         plot.add(
@@ -156,14 +156,14 @@ axis-style: "school-book",
           label: "l1",
           x => m1 * x + q1,
         )
-        
+
         plot.add(
           style: (stroke: (paint: red, thickness: 1pt, dash: "dotted")),
           domain: (p2.at(0), 8),
           label: "l2",
           x => m2 * x + q2,
         )
-        
+
         plot.add(
           style: (stroke: (paint: green, thickness: 1pt, dash: "dotted")),
           domain: (/* intersection of l1 and l3 */
@@ -172,7 +172,7 @@ axis-style: "school-book",
           label: "l3",
           x => m3 * x + q3,
         )
-        
+
         // Draw the Upper Envelope segments as thick solid lines
         // Segment 1: from p1 to p2
         plot.add(
@@ -180,14 +180,14 @@ axis-style: "school-book",
           domain: (-2, p2.at(0)),
           x => m1 * x + q1,
         )
-        
+
         // Segment 2: from p2 to p3
         plot.add(
           style: (stroke: red + 2.5pt),
           domain: (p2.at(0), p3.at(0)),
           x => m2 * x + q2,
         )
-        
+
         // Segment 3: from p3 to p4
         plot.add(
           style: (stroke: green + 2.5pt),

@@ -43,11 +43,11 @@ Firstly, we sort all the rectangles in descending order based on their x-coordin
   )<fig:worst-case-segment-tree>
 
   Therefore, the whole exploration of this is bounded by $O(4 log n)$.
-  
+
   Normally, this would not be possible as we would need to traverse all the nodes in the tree that sums up to the y-interval of the rectangle being opened. However, the optimization comes from the fact that we can use lazy propagation to update the tree: a node's count is valid only if its count is greater than zero, moreover we don't need to check its children.
 - *Closing*: Operation symmetric to the Opening, also requiring $O(log n)$ time.
 
-We can calculate the area covered between two consecutive events $e_i$ and $e_(i+1)$ by looking at the total height covered by the rectangles at the root of the interval tree $T$ and multiplying it by the width between the two events 
+We can calculate the area covered between two consecutive events $e_i$ and $e_(i+1)$ by looking at the total height covered by the rectangles at the root of the interval tree $T$ and multiplying it by the width between the two events
 $ A += "span"(T.root) *  (x_(i+1) - x_i) $.
 
 // TODO: add pseudocode
@@ -60,4 +60,3 @@ The final step is to check that the total time complexity sums up to $O(n log n)
 3. For each event (total of $2n$), we perform an update operation on the interval tree, which takes $O(log n)$ time. Therefore resulting in a total of $O(n log n)$ time for all events.
 
 Thus, the overall time complexity of the algorithm is $O(n log n)$, which meets the requirement.
-

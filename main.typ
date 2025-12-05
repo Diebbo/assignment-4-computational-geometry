@@ -26,4 +26,3 @@
 #include "chapters/task3.typ"
 #include "chapters/task4.typ"
 #include "chapters/task5.typ"
-

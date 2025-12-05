@@ -8,10 +8,10 @@ Let's denote $S$ the set of $n$ rectangles in the plane, where each rectangle is
 //
 // We can then recursively construct the left and right subtrees, by considering the rectangles that lays completely on the left or right of the median respectively. The children nodes will be constructed on half of the distance of the parent node with the extremes.
 //
-// For each canonical set associated with a node $v$ of the segment tree $T$, we build a Tree structure $T_v$ on the y-projections of the rectangles contained in $v$. 
+// For each canonical set associated with a node $v$ of the segment tree $T$, we build a Tree structure $T_v$ on the y-projections of the rectangles contained in $v$.
 //
 // *Query*: To answer the query for a point $q = (q_x, q_y)$, we would recurring from the root having multiple cases:
-// - If $q_x$ is in the interval of the current node, we would proceed the same way but on the secondary DS $T_v$ to count the number of y-projections containing $q_y$. 
+// - If $q_x$ is in the interval of the current node, we would proceed the same way but on the secondary DS $T_v$ to count the number of y-projections containing $q_y$.
 // - If $q_x$ is less than the interval of the current node, we would proceed to the left child, on the right child otherwise.
 
 To solve the problem, we start by defining all the different elementary intervals induced by the x-coordinates of the rectangle edges. This can be achieved by sorting all the rectangles based on their x-coordinates and then creating disjoint intervals between consecutive coordinates (see @segment-tree).
