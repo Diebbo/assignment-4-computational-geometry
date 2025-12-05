@@ -26,10 +26,10 @@ Therefore, the problem transforms to: find the dual line $p_i^*$ with maximum we
 
 *Observation:* If lines are sorted by decreasing weight, any portion of a line $ell_j$ that lies below a higher-weight line $ell_i$ (where $i < j$) can be discarded, as it will never contribute to the maximum weight query.
 
-Consider two incident lines $ell_1$ and $ell_2$ with $w(ell_1) > w(ell_2)$ that intersect at point $(x_0, y_0)$. The line $ell_2$ has a useless interval $[-inf, x_0)$ if it lies below $ell_1$ (see @fig:useless-interval).
+Consider two intersecting lines $ell_1$ and $ell_2$ with $w(ell_1) > w(ell_2)$ that intersect at point $(x_0, y_0)$. The line $ell_2$ has a useless interval $[-inf, x_0)$ if it lies below $ell_1$ (see @fig:useless-interval).
 
 #figure(
-  caption: "Two incident lines with useless intervals",
+  caption: "Two intersecting lines with useless intervals",
 canvas({
   draw.set-style(axes: (
     y: (label: (offset: 1), mark: (end: "stealth", fill: black)),
@@ -50,7 +50,7 @@ canvas({
       let q = -1
       let x-intersect = 4  // Adjust this to set where the lines cross
 
-      // First incident line: y = mx + q (solid before intersection, dotted after)
+      // First intersecting line: y = mx + q (solid before intersection, dotted after)
       plot.add(
         style: (stroke: green + 1.5pt),
         label: "l2",
@@ -64,7 +64,7 @@ canvas({
         x => m * x + q,
       )
 
-      // Second incident line: y = -mx + q' (solid throughout)
+      // Second intersecting line: y = -mx + q' (solid throughout)
       // Calculate q' so the lines intersect at x-intersect
       let y-intersect = m * x-intersect + q
       let q-prime = y-intersect + m * x-intersect
