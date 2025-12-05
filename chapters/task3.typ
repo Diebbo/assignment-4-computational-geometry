@@ -5,24 +5,23 @@ How to find the union of the areas of the $n$ rectangles in $O(n log n)$ time?
 
 === Basic Idea
 
-1. Store rectangles x-intervals into an interval tree.
-2. Sweep a vertical line from top to bottom.
-3. At each event (left or right edge of a rectangle), update the interval tree based on the opening or closing of rectangles.
-4. Calculate the area covered between two consecutive events using the interval tree to find the total height covered by the rectangles at that x-coordinate.
+1. Store rectangles x-intervals into an segment tree.
+2. Sweep a vertical line from left to right.
+3. At each event (left or right edge of a rectangle), update the segment tree based on the opening or closing of rectangles.
+4. Calculate the area covered between two consecutive events using the segment tree to find the total height covered by the rectangles at that x-coordinate.
 5. Sum the areas calculated between all consecutive events to get the total area of the union of rectangles.
 
 === Formal definition
 
 Let $R = {R_1, R_2, ... R_n}$ be the set of rectangles, where each rectangle $R_i = [x_1, x_2] times [y_1, y_2]$.
 
-Based on this construction, we can create a segment tree $T$ that stores the x-intervals of the rectangles as elementary intervals. Each node in the tree represents an interval and contains the span and a count of how many rectangles cover that interval.
-
+Based on this construction, we can create a segment tree $T$ that stores the y-intervals of the rectangles as elementary intervals. Each node in the tree represents an interval and contains the span and a count of how many rectangles cover that interval.
 #figure(
   caption: [Segment Tree for Rectangle Union],
-  image("../assets/segment-tree-augmented.png")
+  rotate(-90deg, image("../assets/segment-tree-augmented.png", width:8cm), reflow: true)
 )<segment-tree-augmented>
 
-For our solution, we need to augment the interval tree $T$ to store, for each node, a count for how many active rectangles cover the interval represented by that node (children included) and their span. The purpose of this augmentation is to efficiently calculate the total height covered by the rectangles at any given x-coordinate during the sweep line process in $O(1)$ while maintaining a $O(log n)$time for updates. It's easy to see that the augmentation will not affect space complexity as it's only a constant.
+For our solution, we need to augment the segment tree $T$ to store, for each node, a count for how many active rectangles cover the interval represented by that node (children included) and their span. The purpose of this augmentation is to efficiently calculate the total height covered by the rectangles at any given x-coordinate during the sweep line process in $O(1)$ while maintaining a $O(log n)$time for updates. It's easy to see that the augmentation will not affect space complexity as it's only a constant.
 
 Let's remark that the preprocessing time to build the interval takes $O(n log n)$ time while the space complexity is $O(n)$.
 
@@ -37,9 +36,10 @@ Firstly, we sort all the rectangles in descending order based on their x-coordin
 
   Let's analyze the worst case time complexity of the opening operation. In the worst case, the maximum number of nodes we need to traverse down is bounded by the biggest subtree that covers the y-interval (see @fig:worst-case-segment-tree) in other words, the whole tree without the leftmost and rightmost paths. Moreover, from the proof of construction of the segment tree, we know that a segment can either cover and entire node or be splitted across its children. Thus, going down a level, the number of nodes visited is halved, as if the interval was splitted, one of the two children won't be visited resulting in a maximum of $4$ nodes being visited at each level.
 
+// set figure width to 10cm
 #figure(
-  caption: [Worst Case Interval Tree Traversal],
-    image("../assets/worst-case-segment-tree.svg", width:4cm)
+  caption: [Worst Case Segment Tree Traversal],
+    image("../assets/worst-case-segment-tree.png", width:10cm)
   )<fig:worst-case-segment-tree>
 
   Therefore, the whole exploration of this is bounded by $O(4 log n)$.
@@ -47,7 +47,7 @@ Firstly, we sort all the rectangles in descending order based on their x-coordin
   Normally, this would not be possible as we would need to traverse all the nodes in the tree that sums up to the y-interval of the rectangle being opened. However, the optimization comes from the fact that we can use lazy propagation to update the tree: a node's count is valid only if its count is greater than zero, moreover we don't need to check its children.
 - *Closing*: Operation symmetric to the Opening, also requiring $O(log n)$ time.
 
-We can calculate the area covered between two consecutive events $e_i$ and $e_(i+1)$ by looking at the total height covered by the rectangles at the root of the interval tree $T$ and multiplying it by the width between the two events
+We can calculate the area covered between two consecutive events $e_i$ and $e_(i+1)$ by looking at the total height covered by the rectangles at the root of the segment tree $T$ and multiplying it by the width between the two events
 $ A += "span"(T.root) dot (x_(i+1) - x_i) $.
 
 // TODO: add pseudocode
@@ -57,7 +57,7 @@ $ A += "span"(T.root) dot (x_(i+1) - x_i) $.
 The final step is to check that the total time complexity sums up to $O(n log n)$:
 1. Sorting the events takes $O(n log n)$ time.
 2. Processing the segment tree for each of the $2n$ events takes $O(n log n)$ time.
-3. For each event (total of $2n$), we perform an update operation on the interval tree, which takes $O(log n)$ time. Therefore resulting in a total of $O(n log n)$ time for all events.
+3. For each event (total of $2n$), we perform an update operation on the segment tree, which takes $O(log n)$ time. Therefore resulting in a total of $O(n log n)$ time for all events.
 
 Thus, the overall time complexity of the algorithm is $O(n log n)$, which meets the requirement.
 
@@ -67,16 +67,18 @@ The divide and conquer approach for computing the union of areas of $n$ rectangl
 
 === Basic Idea
 
-The main idea is to recusrively divide the set of rectangles based on the median points of their x-coordinates, find the rectangles stabbed by the median line, open and close them in an interval tree, and then recursively compute the area for the left and right ones with the invariant that the intervals (and areas) defined by rectangles stabbed by the median line are already considered.
+The main idea is to recursively divide the set of rectangles based on the median points of their x-coordinates, find the rectangles stabbed by the median line, open and close them in an interval tree, and then recursively compute the area for the left and right ones with the invariant that the intervals (and areas) defined by rectangles stabbed by the median line are already considered.
 
 #figure(
   caption: [Divide and Conquer Area Computation Overview],
-  image("../assets/divide-and-conquer-overview.png")
+  image("../assets/divide-and-conquer-overview.png", width: 10cm)
 )<fig:divide-and-conquer-overview>
 
 === Formal definition
 
-As before, we need to introduce an interval tree $T$ that stores the x-intervals of the rectangles in order to efficiently access them given a query point.
+To implement this algorithm, we will use two data structures: an interval tree and a segment tree with lazy propagation.
+
+The interval tree $T$ will store the number of rectangles stabbed by a vertical line at a given x-coordinate. The purpose of this tree is to efficiently find all rectangles that are stabbed by the median line at each recursive step.
 
 For the y-intervals, we will use a segment tree $S$ augmented that also uses lazy propagation as before. The augmentation needs to take account of the following propagation:
 - How many rectangles are currently opened in the interval represented by the node.
@@ -102,7 +104,7 @@ function computeArea(rectangles R):
   let area = 0
   for each rectangle r in stabbed:
     adjustSegmentTree(S, r) // open/close rectangles in S and update area accordingly
-    area += extraAreaAdded(S, r, OPEN)
+    area += extraAreaAdded(S, r, OPEN, xm)
   
     let L = {rectangles in R with x2 < xm}
     area += computeArea(L)
@@ -120,14 +122,15 @@ When opening a rectangle $r = [x_1, x_2] times [y_1, y_2]$, we need to traverse 
 
 #figure(
   caption: [Adjusting Segment Tree for Rectangle Opening],
-    image("../assets/recursion-example.png")
+    image("../assets/recursion-example.png", width:10cm)
 )<fig:divide-and-conquer-segment-tree-adjustment>
 
+Finally, let's briefly explain the `extraAreaAdded` function used to calculate the extra area added by a rectangle being opened or closed (see @fig:divide-and-conquer-extra-area-analysis). The idea is to traverse the segment tree $S$ to find the nodes whose intervals are fully covered by the y-interval of the rectangle being opened/closed. For each of these nodes, we calculate the extra area added by the rectangle based on its x-interval and the boundaries stored in the node.
 
 #figure(
   caption: [Analyzing Extra Area Added by Rectangle],
 ```pseudocode
-function extraAreaAdded(segmentTree S, rectangle r, enum {OPEN, CLOSE} contributingType):
+function extraAreaAdded(segmentTree S, rectangle r, enum {OPEN, CLOSE} contributingType, xm):
   let (x1, x2) = (r.x1, r.x2)
   let (y1, y2) = (r.y1, r.y2)
   
@@ -136,8 +139,9 @@ function extraAreaAdded(segmentTree S, rectangle r, enum {OPEN, CLOSE} contribut
   for each node n in S that overlaps with [y1, y2]:
     if n is fully covered by [y1, y2]:
       let span = n.span
-      let leftBoundary = n.leftmostX
-      let rightBoundary = n.rightmostX
+      // we introduce the boundary of the x median line xm as it's the invariant of the algorithm
+      let leftBoundary = n.leftmostX if contributingType == CLOSE else min(n.leftmostX, xm) 
+      let rightBoundary = n.rightmostX if contributingType == CLOSE else max(n.rightmostX, xm)
       
       // we want to take the rectangle part that extends beyond the previous one
       x1 = max(x1, rightBoundary) if contributingType == OPEN else min(x1, leftBoundary)
@@ -147,3 +151,9 @@ function extraAreaAdded(segmentTree S, rectangle r, enum {OPEN, CLOSE} contribut
   return extraArea
 ```
 )<fig:divide-and-conquer-extra-area-analysis>
+
+=== Time Complexity Analysis
+
+Trust is $O(n log n)$.
+
+*Correctness*: yes.
