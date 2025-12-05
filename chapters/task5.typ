@@ -1,5 +1,6 @@
 #import "@preview/cetz:0.4.2": canvas, draw
 
+#set heading(numbering: "1.a")
 
 #let Conv="Conv"
 
@@ -150,7 +151,16 @@ Thus, we we can express $P pc Conv(P) = Conv(P) xor Conv(P)$. From the theorem d
 
 $square$
 ==
-Impossible, see image
+
+_If $P$ is a simple polygon and $C$ is a disk (circle and its interior) then $P pc C$ is convex if the diameter of $C$ is at least as large as the diameter of $P$._
+
+It's easy to find show a counter-example to disprove the statement.
+
+#figure(
+  image("../assets/counter-5b.svg"),
+  caption: [Counter-example for the statement]
+)
+
 ==
 _If $P$ is a simple polygon then there exists a large enough disk such that $P pc C$ is convex._
 
