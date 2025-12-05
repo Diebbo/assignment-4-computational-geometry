@@ -25,4 +25,4 @@ $
 
 Each rectangle is stored in $O(log n)$ nodes of the primary segment tree, and since the y-coordinates also need to be sorted and structured, each secondary segment tree $T_v$ uses $O(|S(v)|)$ space. Therefore, the overall space complexity is $O(n log n)$.
 
-*Time*: Query time is the hight of the primary segment tree $O(log n)$ times the query time of the secondary segment tree $O(log n)$, resulting in a total query time of $O(log^2 n)$.
+*Time*: Query time is the height of the primary segment tree $O(log n)$ times the query time of the secondary segment tree $O(log n)$, resulting in a total query time of $O(log^2 n)$.
