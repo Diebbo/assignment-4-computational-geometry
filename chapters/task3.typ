@@ -1,7 +1,7 @@
-= Question
+= Area computation
 How to find the union of the areas of the $n$ rectangles in $O(n log n)$ time?
 
-== Answer Sweep Line
+== Sweep Line
 
 ==== Basic Idea
 

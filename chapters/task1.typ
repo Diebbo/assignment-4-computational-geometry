@@ -1,4 +1,4 @@
-= Question
+= Rectangle Stabbing Counting
 
 Using the segment tree paradigm we need to construct a data structure capable of answering efficiently the number of rectangles a point $q$ lays in. The DS must use $O(n log n)$ space and $O(log^2 n)$ in time complexity.
 

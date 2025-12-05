@@ -1,4 +1,4 @@
-= Question
+= Geodesic Distances in Polygons with Holes
 
 #figure(
   caption: "Polygon with holes.",
