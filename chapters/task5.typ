@@ -4,7 +4,7 @@
 #let Conv="Conv"
 
 = Minkowski Sum
-#let pc = $plus.o$
+#let pc = $xor$
 Let $A pc B$ the Minkowski sum of two sets $A, B in RR^2$, defined as $A pc B := {a + b | a in A, b in B }$.
 
 ==
@@ -19,117 +19,136 @@ We will denote $p' in P := a + A$ (a linear combination of a vertex of $P$ and $
 
 By plugging in the definitions we have:
 $
-q = lambda (a + A) + (1 - lambda) (b + B) = \ lambda a + (1 - lambda) b + lambda A + (1 - lambda) B = \ u + w
+q = lambda (a + A) + (1 - lambda) (b + B) = \ lambda a + (1 - lambda) b + lambda A + (1 - lambda) B = \ u + w \ u := lambda a + (1 - lambda) b \ w := lambda A + (1 - lambda) B
 $
 
-From the definition of convex hull of a concave polygon, we know that $lambda a + (1 - lambda) b in Conv(P)$ as well, but is not always true for the other case. In order to overcome this problem, we observe that we can rewrite the equation above, considering the middle point between $u$ and $w$:
+From the definition of convex hull of a concave polygon, we know that $u in Conv(P)$ as well as $w$  from definition, but is not always true for the other way around. In order to overcome this problem, we observe that we can rewrite the equation above, considering the middle point between $u$ and $w$:
 $
 q = u + w = 2 v, quad v = (u + w)/2
 $
 
-Therefore, the problem reduces to show that $v in P pc Conv(P)$.
-
-Now we encounter our first problem: the tow points may be separated by an edge of the polygon. // (see <fig:concavity-separation>).
+Where $v$ is inside $Conv(P)$, by the definition of convexity.
 
 #figure(
   caption: "Two points u and w separated by a concave edge of the polygon.",
   canvas(length: 1cm, {
     import draw: *
-
-    // Draw the concave polygon
-    line((0, 0), (4, 0), stroke: (thickness: 1.5pt, paint: blue))
-    line((4, 0), (5, 1.5), stroke: (thickness: 1.5pt, paint: blue))
-    line((5, 1.5), (4.5, 3), stroke: (thickness: 1.5pt, paint: blue))
-    line((4.5, 3), (3, 2.5), stroke: (thickness: 1.5pt, paint: red)) // concave edge
-    line((3, 2.5), (1.5, 3), stroke: (thickness: 1.5pt, paint: blue))
-    line((1.5, 3), (0, 2), stroke: (thickness: 1.5pt, paint: blue))
-    line((0, 2), (0, 0), stroke: (thickness: 1.5pt, paint: blue))
-
-    // Mark points u and w
-    circle((1, 1.2), radius: 0.08, fill: green, stroke: green)
-    content((1, 1.2), anchor: "south", padding: 0.15, text(fill: green)[*u*])
-
-    circle((3.5, 1.8), radius: 0.08, fill: green, stroke: green)
-    content((3.5, 1.8), anchor: "south", padding: 0.15, text(fill: green)[*w*])
-
-    // Draw dashed line connecting them through the concave region
-    line((1, 1.2), (3.5, 1.8), stroke: (dash: "dashed", paint: gray))
-
-    // Mark the midpoint v
-    circle((2.25, 1.5), radius: 0.08, fill: purple, stroke: purple)
-    content((2.25, 1.5), anchor: "north", padding: 0.15, text(fill: purple)[*v*])
-
+    
+    let u = (1, 0.5)
+    let w = (2.9, 1)
+    // Left triangle (open)
+    line((0, 0), (2, 2), stroke: (thickness: 1.5pt, paint: blue))
+    line((5, 3), (0, 3), stroke: (thickness: 1.5pt, paint: blue))
+    line((0, 3), (0, 0), stroke: (thickness: 1.5pt, paint: blue))
+    
+    // Right triangle (open)
+    line((5, 0), (5, 3), stroke: (thickness: 1.5pt, paint: blue))
+    
+    // Concave edge connecting the two triangles
+    line((2, 2), (5, 0), stroke: (thickness: 1.5pt, paint: blue))
+    
+    // Mark point u (inside the polygon P - left triangle)
+    circle(u, radius: 0.08, fill: green, stroke: green)
+    content(u, anchor: "east", padding: 0.15, text(fill: green)[*u*])
+    
+    // dotted red line on the convex hull
+    line((0, 0), (5, 0), stroke: (dash: "dashed", paint: red))
+    
+    // Mark point w (in the concave region - outside P but would be inside Conv(P))
+    circle(w, radius: 0.08, fill: green, stroke: green)
+    content(w, anchor: "north", padding: 0.15, text(fill: green)[*w*])
+    
+    // Draw dashed line connecting them
+    
+    line(u, w, stroke: (dash: "dashed", paint: gray))
+    
+    // Mark the midpoint v (on the concave edge or near it)
+    let v = ((u.at(0) + w.at(0)) / 2, (u.at(1) + w.at(1)) / 2)
+    circle(v, radius: 0.08, fill: purple, stroke: purple)
+    content((v.at(0) , v.at(1) - 0.5), anchor: "south", padding: 0.15, text(fill: purple)[*v*])
+    
     // Highlight the concave edge
-    content((3.75, 2.7), text(fill: red, size: 9pt)[concave edge])
-
+    content((2.5, 2.5), text(fill: red, size: 9pt)[concave edge])
+    
     // Add label for polygon
-    content((2.5, 0.3), text(size: 10pt)[Polygon P])
+    content((2.5, 3.3), text(size: 10pt)[Polygon P])
+    content((1, -0.3), text(size: 10pt, fill:red)[conv P])
   })
 )<fig:concavity-separation>
 
-#figure(
-  caption: "The line segment s intersecting the polygon, showing the shift from (u,w) to (u',w').",
-  canvas(length: 1cm, {
-    import draw: *
-
-    // Draw the same concave polygon
-    line((0, 0), (4, 0), stroke: (thickness: 1.5pt, paint: blue))
-    line((4, 0), (5, 1.5), stroke: (thickness: 1.5pt, paint: blue))
-    line((5, 1.5), (4.5, 3), stroke: (thickness: 1.5pt, paint: blue))
-    line((4.5, 3), (3, 2.5), stroke: (thickness: 1.5pt, paint: red))
-    line((3, 2.5), (1.5, 3), stroke: (thickness: 1.5pt, paint: blue))
-    line((1.5, 3), (0, 2), stroke: (thickness: 1.5pt, paint: blue))
-    line((0, 2), (0, 0), stroke: (thickness: 1.5pt, paint: blue))
-
-    // Original points u and w (faded)
-    circle((1, 1.2), radius: 0.06, fill: green. lighten(50%), stroke: green. lighten(50%))
-    content((0.7, 1.2), text(fill: green. lighten(50%), size: 9pt)[u])
-
-    circle((3.5, 1.8), radius: 0.06, fill: green.lighten(50%), stroke: green.lighten(50%))
-    content((3.8, 1.8), text(fill: green.lighten(50%), size: 9pt)[w])
-
-    // Draw the line segment s through the concave region
-    line((1.8, 2.6), (2.8, 2.55), stroke: (thickness: 2pt, paint: orange))
-
-    // Mark s' and s''
-    circle((1.8, 2.6), radius: 0.08, fill: orange, stroke: orange)
-    content((1.8, 2.6), anchor: "south-east", padding: 0.1, text(fill: orange, size: 9pt)[*s'*])
-
-    circle((2.8, 2.55), radius: 0.08, fill: orange, stroke: orange)
-    content((2.8, 2.55), anchor: "south-west", padding: 0.1, text(fill: orange, size: 9pt)[*s''*])
-
-    // Mark s_min (closer to u)
-    circle((1.8, 2.6), radius: 0.1, stroke: (paint: orange, dash: "dotted"), fill: none)
-    content((1.5, 2.8), text(fill: orange, size: 8pt)[s#sub[min]])
-
-    // New shifted points u' and w'
-    circle((1.5, 2.5), radius: 0.08, fill: green.darken(20%), stroke: green.darken(20%))
-    content((1.5, 2.5), anchor: "north-east", padding: 0.1, text(fill: green.darken(20%))[*u'*])
-
-    circle((3.2, 2.4), radius: 0.08, fill: green.darken(20%), stroke: green.darken(20%))
-    content((3.2, 2.4), anchor: "north-west", padding: 0.1, text(fill: green.darken(20%))[*w'*])
-
-    // Arrow showing direction d
-    line((4.5, 3), (3, 2.5), stroke: (paint: red, thickness: 1.5pt))
-    line((3.2, 2.6), (3.5, 2.4), stroke: (paint: red, thickness: 1pt), mark: (end: ">"))
-    content((3.7, 2.5), text(fill: red, size: 9pt)[#math. arrow(d)])
-
-    // Normal vector n(d)
-    line((2.3, 1.5), (2.3, 3), stroke: (paint: purple, dash: "dashed"), mark: (end: ">"))
-    content((2.5, 3), text(fill: purple, size: 9pt)[n(#math.arrow("d"))])
-
-    // Show that u' and w' are inside P
-    content((1.2, 2), text(fill: green. darken(20%), size: 8pt)[u' ∈ P])
-    content((3.5, 2), text(fill: green.darken(20%), size: 8pt)[w' ∈ P])
-  })
-)<fig:shift-process>
 
 Let's now denote $arrow(d)$ as the direction of the edge of the convex hull that contains the two points. From the definition of concavity, there exists at least a point $q in P$ such that $forall p', p'' in P, lambda in [0, 1]$ it holds that $q in.not lambda p' + (1 - lambda) p''$, therefore must exists a line segment $s$ that connects the intersects the two edges of the polygon. Moreover, we will denote $n(d)$ as the normal vector to $arrow(d)$. We can argue that the vector $v$ can be expressed as $v = k dot n(d)$, where $k in RR$ and will intersect the polygon $P$ in two points $s', s'' in P$.
 
+#figure(
+  caption: "Two points u and w separated by a concave edge of the polygon.",
+  canvas(length: 1cm, {
+    import draw: *
+    
+    // Define polygon P with a concave section
+    let points = (
+      (0, 0),
+      (5, 0),
+      (5, 3),
+      (2.5, 1.5),  // concave point
+      (0, 3)
+    )
+    
+    // Draw polygon P
+    for i in range(points.len()) {
+      let next_i = calc.rem(i + 1, points.len())
+      line(points.at(i), points.at(next_i), stroke: (thickness: 1.5pt, paint: blue))
+    }
+    
+    // Convex hull edge (dashed red line at bottom)
+    line((0, 3), (5, 3), stroke: (dash: "dashed", paint: red, thickness: 1.5pt))
+    
+    // Mark points u and w inside polygon
+    let u = (1, 2)
+    let w = (4, 2)
+    
+    
+    // Mark the midpoint v
+    let v = ((u.at(0) + w.at(0)) / 2, (u.at(1) + w.at(1)) / 2)
+    circle(v, radius: 0.08, fill: purple, stroke: purple)
+    content((v.at(0), v.at(1)), anchor: "south", padding: 0.15, text(fill: purple)[*v*])
+    circle((v.at(0) - 0.5, v.at(1)), radius: 0.06, fill: purple, stroke: purple)
+    content((v.at(0) - 0.5, v.at(1)), anchor: "south", padding: 0.15, text(fill: purple)[*v'*])
+    
+    // Segment s passing through the polygon (perpendicular to d)
+    // line((0, v.at(1)), (5, v.at(1)), stroke: (thickness: 1pt, paint: orange, dash: "dotted"))
+    
+    // Mark points s' and s'' where segment intersects polygon edges
+    // get m and q for the line goin from point[2] to point[3] and from point[3] to point[4]
+    let m1 = (points.at(3).at(1) - points.at(2).at(1)) / (points.at(3).at(0) - points.at(2).at(0))
+    let q1 = points.at(2).at(1) - m1 * points.at(2).at(0)
+    let m2 = (points.at(4).at(1) - points.at(3).at(1)) / (points.at(4).at(0) - points.at(3).at(0))
+    let q2 = points.at(3).at(1) - m2 * points.at(3).at(0)
+
+    let s_prime = ((v.at(1) - q1) / m1, v.at(1))
+    let s_double_prime = ((v.at(1) - q2) / m2, v.at(1))
+    
+    circle(s_prime, radius: 0.08, fill: orange, stroke: orange)
+    content((s_prime.at(0), s_prime.at(1)), anchor: "north", padding: 0.15, text(fill: orange)[*s'*])
+    
+    circle(s_double_prime, radius: 0.08, fill: orange, stroke: orange)
+    content((s_double_prime.at(0), s_double_prime.at(1)), anchor: "north", padding: 0.15, text(fill: orange)[*s''*])
+
+    line(s_prime, s_double_prime, stroke: (thickness: 1pt, paint: orange, dash: "dotted"))
+    
+    // Add labels
+    content((2.5, 3.5), text(size: 10pt)[Polygon P])
+    content((2.5, -0.5), text(size: 10pt, fill: red)[Conv(P)])
+    
+    
+  })
+)<fig:concavity-separation>
+
 If we now shift again the points $u$ to $u' = u - s_("min")$ where $s_("min")$ is the point between $s'$ and $s''$ that is closer to $u$, and $w$ to $w' = w + s_("min")$, we have that both $u'$ and $w'$ (from the definition of convexity and convex hull) lie inside the polygon $P$, hence their sum $q = u' + w'$ lies inside $P pc Conv(P)$.
 
-$square$
+Thus, we we can express $P pc Conv(P) = Conv(P) xor Conv(P)$. From the theorem defined in class, the sum of two convex sets is convex, hence $P pc Conv(P)$ is convex.
 
+
+$square$
 ==
 Impossible, see image
 ==
