@@ -152,7 +152,20 @@ $square$
 ==
 Impossible, see image
 ==
-TODO (Impossible)
+_If $P$ is a simple polygon then there exists a large enough disk such that $P pc C$ is convex._
+
+The statement is false.
+
+Consider the simple polygon $P$ defined by the vertices $A = (1, 1)$, $B = (0, 0)$, $C = (-1, 1)$ and $D = (0, -1)$. \
+Consider also a disk $C$ of radius $r > 0$ centered on the origin. \
+The top-most points of the polygon $P$ are $A$ and $C$. When computing the Minkowski sum $P pc C$, the top-most points will be $E = (1, 1 + r)$ and $F = (-1, 1 + r)$. \
+Consider the midpoint $G = (0, 1 + r)$ between $E$ and $F$. The closest points to $G$ on the polygon $P$ are $A$ and $C$. The distance of $G$ from both $A$ and $C$ is exactly $sqrt(r^2 + 1)$, which is greater than $r$ for every $r$. 
+$ sqrt(r^2 + 1) > r \
+  r^2 + 1 > r^2 \
+  1 > 0
+$
+Therefore, the point $G$ does not lie inside the disk of radius $r$ centered at either $A$ or $C$, hence it does not lie inside the Minkowski sum $P pc C$, while being the midpoint of the segment $dash(E F)$. This shows that $P pc C$ is not convex for any $r > 0$. \
+$square$
 
 #figure(
 canvas({
@@ -245,7 +258,7 @@ canvas({
   content(G, [$G$], anchor: "south-east", padding: .1)
 })
 ,
-caption: []) <5.a>
+caption: [Visualization of the counter-example]) <fig:counter-example-minkowski-disk>
 
 ==
 // For two convex polygons P and Q, the perimeter of P ⊕ Q is equal to the sum of the perimeters of P and Q.
@@ -256,3 +269,5 @@ An extreme can be a vertex or an edge. Hence, an extreme $q$ on $Q$ can be the s
 
 Hence, every edge of $Q$ either corresponds to an edge of $P$ or $R$, or is the sum of two edges of $P$ and $R$. Also, every edge in $P$ will have a corresponding edge in $Q$, and the same for $R$. \
 Therefore, the perimeter of $Q$ is the sum of the perimeters of $P$ and $R$.
+
+$square$
