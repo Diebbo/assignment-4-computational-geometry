@@ -1,4 +1,7 @@
+#import "@preview/cetz:0.4.2"
+
 #let Conv="Conv"
+
 = Minkowski Sum
 #let pc = $plus.circle$
 Let $A pc B$ the Minkowski sum of two sets $A, B in RR^2$, defined as $A pc B := {a + b | a in A, b in B }$.
@@ -134,7 +137,101 @@ $square$
 == 
 Impossible, see image
 ==
-TODO (yes)
+TODO (Impossible)
+
+#figure(
+cetz.canvas({
+  // Importa le funzioni di disegno
+  import cetz.draw: *
+
+
+  let A = (1, 1)
+  let B = (0, 0)
+  let C = (-1, 1)
+  let D = (0, -1)
+  let r = 3
+
+  let E = (A.at(0), A.at(1) + r)
+  let F = (C.at(0), C.at(1) + r)
+  let G = (0, E.at(1))
+
+  grid(
+    (-3, -2),
+    (3, 2 + r),
+    step: 1,
+    stroke: gray + 0.2pt,
+  )
+
+  line((-3, 0), (3, 0), mark: (end: "stealth"), stroke: 0.4pt)
+  content((), $x$, anchor: "west", padding: .1)
+  line((0, -2), (0, 2 + r), mark: (end: "stealth"), stroke: 0.4pt)
+  content((), $y$, anchor: "south", padding: .1)
+
+  arc(
+    A,
+    anchor: "origin",
+    start: 60deg,
+    stop: 120deg,
+    radius: r,
+    stroke: 1pt + red,
+    mode: "PIE",
+    name: "circleA",
+    fill: rgb("#d2310d33"),
+  )
+
+  arc(
+    C,
+    anchor: "origin",
+    start: 60deg,
+    stop: 120deg,
+    radius: r,
+    stroke: 1pt + red,
+    mode: "PIE",
+    name: "circleA",
+    fill: rgb("#d2310d33"),
+  )
+
+  line(
+    A,
+    B,
+    C,
+    D,
+    close: true,
+    //fill: luma(200), // Colore di riempimento grigio chiaro
+    stroke: 1.5pt + black,
+  )
+
+  line(
+    A,
+    E,
+    stroke: 1pt + red,
+    name: "lineA",
+  )
+  line(
+    C,
+    F,
+    stroke: 1pt + red,
+    name: "lineC",
+  )
+
+  line(E, F, stroke: 1pt + blue, name: "lineEF")
+  line(C, G, stroke: (thickness: 1pt, paint: green, dash: (4pt, 3pt)), name: "lineCG")
+  line(A, G, stroke: (thickness: 1pt, paint: green, dash: (4pt, 3pt)), name: "lineAG")
+
+
+  content(A, [$A$], anchor: "south-east", padding: .1)
+  content(B, [$B$], anchor: "north", padding: .1)
+  content(C, [$C$], anchor: "south-east", padding: .1)
+  content(D, [$D$], anchor: "north", padding: .1)
+  content(E, [$E$], anchor: "south-east", padding: .1)
+  content(F, [$F$], anchor: "south-east", padding: .1)
+  content("lineA.mid", [$r$], anchor: "east", padding: .1)
+  content("lineC.mid", [$r$], anchor: "east", padding: .1)
+  content(G, [$G$], anchor: "south-east", padding: .1)
+})
+,
+caption: []) <5.a>
+
 ==
 // For two convex polygons P and Q, the perimeter of P ⊕ Q is equal to the sum of the perimeters of P and Q.
 We start by the following observation: \
