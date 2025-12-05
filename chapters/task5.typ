@@ -1,4 +1,5 @@
-#import "@preview/cetz:0.4.2"
+#import "@preview/cetz:0.4.2": canvas, draw
+
 
 #let Conv="Conv"
 
@@ -29,11 +30,6 @@ $
 Therefore, the problem reduces to show that $v in P pc Conv(P)$.
 
 Now we encounter our first problem: the tow points may be separated by an edge of the polygon. // (see <fig:concavity-separation>).
-#import "@preview/cetz:0.4.2": canvas, draw, tree
-
-#import "@preview/cetz:0.4.2": canvas, draw
-
-= Proof Diagrams
 
 #figure(
   caption: "Two points u and w separated by a concave edge of the polygon.",
@@ -140,9 +136,9 @@ Impossible, see image
 TODO (Impossible)
 
 #figure(
-cetz.canvas({
+canvas({
   // Importa le funzioni di disegno
-  import cetz.draw: *
+  import draw: *
 
 
   let A = (1, 1)
