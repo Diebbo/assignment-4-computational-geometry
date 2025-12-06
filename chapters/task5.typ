@@ -10,7 +10,7 @@ Let $A pc B$ the Minkowski sum of two sets $A, B in RR^2$, defined as $A pc B :=
 
 ==
 
-If $P$ is a simple polygon then $P xor Conv(P)$ is convex, where $Conv(P)$ is the convex hull of $P$.
+_If $P$ is a simple polygon then $P xor Conv(P)$ is convex, where $Conv(P)$ is the convex hull of $P$._
 
 *Solution*
 
@@ -154,15 +154,21 @@ $square$
 
 _If $P$ is a simple polygon and $C$ is a disk (circle and its interior) then $P pc C$ is convex if the diameter of $C$ is at least as large as the diameter of $P$._
 
-It's easy to find show a counter-example to disprove the statement.
+It's easy to find a counter-example to disprove the statement, as shown in @fig:counter-example-5b.
 
 #figure(
   image("../assets/counter-5b.svg"),
   caption: [Counter-example for the statement]
-)
+) <fig:counter-example-5b>
+
+The blue dashed line represents the diameter of the polygon $P$, while the green line represents the radius of the disk $C$. In the image, the radius $r$ is exactly half of the diameter $d$ of the polygon $P$, hence the diameter of the disk is the same of $P$. \
+The yellow region contains points that don't belong to the Minkowski sum $P pc C$, while they can be expressed as convex combination of points that belong to the Minkowski sum, hence proving that $P pc C$ is not convex, even if the diameter of the disk is equal or greater than the diameter of the polygon $P$.
+
+For a more formal proof of the general case, check exercise *5.c*.
 
 ==
 _If $P$ is a simple polygon then there exists a large enough disk such that $P pc C$ is convex._
+
 
 The statement is false.
 
