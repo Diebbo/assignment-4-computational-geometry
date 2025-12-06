@@ -62,7 +62,7 @@ Thus, we have reduced the given problem to the problem
 of locating a point on a planar graph.
 
 #figure(
-  caption: "Two intersecting lines with redundant intervals. TODO: Improve",
+  caption: "Two intersecting lines with redundant intervals.",
   redundant-interval,
 )<fig:redundant-interval>
 

@@ -19,7 +19,7 @@
       // Parameters for the two lines
       let m = 1
       let q = -1
-      let x-intersect = 4 // Adjust this to set where the lines cross
+      let x-intersect = 0 // Adjust this to set where the lines cross
 
       // First intersecting line: y = mx + q (solid before intersection, dotted after)
       plot.add(
