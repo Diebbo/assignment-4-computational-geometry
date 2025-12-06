@@ -1,6 +1,7 @@
 #import "@preview/cetz:0.4.2": canvas, draw
 #import "@preview/cetz-plot:0.1.3": plot
-#import "@preview/ctheorems:1.1.3": *
+#import "@preview/ctheorems:1.1.3": thmrules, thmbox
+#import "@preview/lovelace:0.3.0": *
 
 #import "figures/redundant-interval.typ": *
 
@@ -8,6 +9,7 @@
 #set heading(numbering: "1.1.")
 
 #let definition = thmbox("definition", "Definition", inset: (x: 0em, top: 0em), base_level: 1)
+#let lemma = thmbox("lemma", "Lemma", inset: (x: 0em, top: 0em), base_level: 1)
 
 = Weighted Point-Line Query via Dual Space
 
@@ -66,4 +68,59 @@ of locating a point on a planar graph.
 
 == Solution of the point location problem
 
-TODO
+There exist various solutions to the point location problem
+for finite planar subdivisions that use $O(log n)$ time and $O(n)$ space.
+Since it seemed to us like the simplest,
+we chose to use the _triangulation refinement_ algorithm@kirkpatrick83.
+
+#lemma[
+  For every planar graph with $n >= 3$ vertices it is possible
+  to find at least $n slash 24$ independent vertices in polynomial time. \
+  *Proof*:
+  It is a well-known fact that a planar graph with $n$
+  vertices has at most $3 n - 6$ edges.
+  This means that the average vertex degree is 6,
+  which in turn means less than half of the vertices have
+  a degree that is higher than 11.
+  It is then possible to build in linear time the set of vertices
+  with weight not exceeding 11.
+  Then, a simple algorithm can remove all of the vertices
+  that are adjacent to another vertex already in the set.
+] <lemma:find-independent>
+
+The first step is to run a polygon
+triangulation algorithm for each of the regions.
+Let $S_0$ be the resulting graph.
+
+Find a set of $V$ independent vertices of $S_i$
+using the steps outlined by @lemma:find-independent.
+Remove each $v_(i,j) in V_i$ that is not a boundary point from $S_i$.
+Each hole can then be re-triangulated with the introduction of $deg(v_(i,j)) - 3$ edges.
+Annotate each of the added triangles with pointers to the triangles it replaced.
+Lastly, let $S_(i+1)$ be the resulting graph.
+Repeat the previous steps until the only vertices left in $S_i$
+are the four vertices on the boundary of the region.
+
+Notice how each step removes at least $23 / 24 |S_i|$.
+From this fact trivially follows that the number of steps
+will at most be $h(n) = log_(24 slash 23) |S_0| = log_(24 slash 23) n$.
+Additionally, the total storage space is bounded by the following geometric series:
+$
+  sum_(i=0)^h(n) 23/24 |S_i| <
+  sum_(i=0)^h(n) 23/24 n
+$
+which converges to $O(n)$.
+
+A simple algorithm for querying point $p$ in the resulting structure
+(in $O(log(n))$ time) would be the following:
+
+#align(center, pseudocode-list(title: [Algorithm QueryPoint(p)], booktabs: true)[
+  + $"Candidates"_h(n) <- "regions of" S_h(n)$
+  + $R <- "region in Candidates"_h(n) "containing" p$
+  + $i <- h(n) - 1$
+  + *while* $i > 0$
+    + $"Candidates"_i <- "parents"(R)$
+    + $R <- "region in Candidates"_i "containing" p$
+    + $i <- i-1$
+  + *return* R
+])
