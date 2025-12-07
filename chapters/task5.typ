@@ -157,10 +157,15 @@ $square$
 _If $P$ is a simple polygon then $P xor Conv(P)$ is convex, where $Conv(P)$ is the convex hull of $P$._
 
 #let CP = $Conv(P)$
-Let'define $Q = Conv(P) pc Conv(P) = {a + b | a in CP, b in CP}$.
-Let's take a random point $q in Q$. We can express that point $q$ as the sum of two points $a in CP, b in CP$. Since #CP is convex, then also the midpoint of those two points $v = (a + b)/2$ is in #CP, therefore $exists v in CP | q = v + v$.
+Let $Q = Conv(P) pc Conv(P) = {a + b | a in CP, b in CP}$.
+Take a random point $q in Q$.
+We can express that point $q$ as the sum of two points $a in CP$, $b in CP$.
+Since #CP is convex, then the midpoint of $a$ and $b$, $v = (a + b)/2$, will also be in #CP.
+Therefore, it follows that $exists v in CP | q = v + v$.
 
-By the definition of convex hull, we can express as the set of convex combination of two points in $P$: $CP = {lambda a + (1-lambda)b | lambda in [0, 1], a in P, b in P} $
+By the definition of convex hull,
+we can express it as the set of convex combination of two points in $P$:
+$CP = {lambda a + (1-lambda)b | lambda in [0, 1], a in P, b in P}$.
 
 Then, we can express $v$ as $v = lambda u + (1-lambda)w$ for some $u, w in P$ and $lambda in [0, 1]$.
 
