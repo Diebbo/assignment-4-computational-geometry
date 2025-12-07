@@ -26,7 +26,7 @@ We use the standard point-line duality to transform the problem into dual space:
 - $p_i = (x_p, y_p) |-> p_i^* : y = x_p x - y_p$.
 - $ell : y = m x + b |-> ell^* = (m, -b)$.
 
-Recall the Duality property, that states that a primal point $p$
+Recall the Duality property, which states that a primal point $p$
 lies above a primal line $ell$ if and only if
 the dual point $ell^*$ lies above the dual line $p^*$.
 Therefore, the problem becomes to find the dual line $p_i^*$
@@ -81,10 +81,10 @@ Before describing the algorithm, we need the following lemma.
   It is a well-known fact that a planar graph with $n$
   vertices has at most $3 n - 6$ edges.
   This means that the average vertex degree is 6,
-  which in turn means less than half of the vertices have
+  which in turn means fewer than half of the vertices have
   a degree that is higher than 11.
   It is then possible to build in linear time the set of vertices
-  with weight not exceeding 11.
+  with degree not exceeding 11.
   Then, a simple algorithm can remove all of the vertices
   that are adjacent to another vertex already in the set.
   $square$
@@ -105,8 +105,8 @@ Repeat the previous steps until the only vertices left in $S_i$
 are the four vertices on the boundary of the region.
 
 Notice how each step removes at least $23 / 24 |S_i|$.
-From this fact trivially follows that the number of steps
-will at most be $h(n) = log_(24 slash 23) |S_0| = log_(24 slash 23) n$.
+From this fact it trivially follows that the number of steps
+will be at most $h(n) = log_(24 slash 23) |S_0| = log_(24 slash 23) n$.
 Additionally, the total storage space is bounded by the following geometric series:
 $
   sum_(i=0)^h(n) 23/24 |S_i| <
