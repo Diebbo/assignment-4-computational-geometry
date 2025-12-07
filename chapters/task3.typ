@@ -65,7 +65,7 @@ Based on this construction, we can create a segment tree $T$ that stores the y-i
 
 For our solution, we need to augment the segment tree $T$ to store, for each node, a count for how many active rectangles cover the interval represented by that node (children included) and their span. The purpose of this augmentation is to efficiently calculate the total height covered by the rectangles at any given x-coordinate during the sweep line process in $O(1)$ while maintaining $O(log n)$ time for updates. It's easy to see that the augmentation will not affect space complexity as it's only a constant.
 
-Let's remark that the preprocessing time to build the interval takes $O(n log n)$ time while the space complexity is $O(n)$.
+Let's remark that the preprocessing time to build the interval takes $O(n log n)$ time while the space complexity is $O(n log n)$.
 
 Firstly, we sort all the rectangles in ascending order based on their x-coordinates in order to create a list $E = {e_1, e_2, ... e_(2n)}$ of events. At each event $e_i$, we either open or close a rectangle based on whether we encounter the left or right edge of a rectangle, therefore having two possible types of events:
 - *Opening*: We query the segment tree $T$ to increase the y-interval of the rectangle being opened: starting from the root, we traverse down the tree to update the count of each node whose interval is included in the y-interval of the rectangle being opened. From this operation, we can have 3 different cases:
@@ -87,7 +87,7 @@ Firstly, we sort all the rectangles in ascending order based on their x-coordina
   Therefore, the whole exploration of this is bounded by $O(4 log n)$.
 
   Normally, this would not be possible as we would need to traverse all the nodes in the tree that sum up to the y-interval of the rectangle being opened. However, the optimization comes from the fact that we can use propagation to update the tree: a node's count is valid only if its count is greater than zero, moreover we don't need to check its children.
-- *Closing*: Operation symmetric to the Opening, also requiring $O(log n)$ time.
+- *Closing*: Operation symmetric to the Opening, also requiring $O(log n)$ time. We only need to be aware of the case where we close a rectangle where the children are still opened by other rectangles (i.e. count > 1). In this case we still need to update the span value of the node with the sum of the spans of its children while decreasing the count.
 
 We can calculate the area covered between two consecutive events $e_i$ and $e_(i+1)$ by looking at the total height covered by the rectangles at the root of the segment tree $T$ and multiplying it by the width between the two events
 $ A += "span"(T.root) dot (x_(i+1) - x_i) $.
@@ -245,14 +245,15 @@ Following the formula for the total time complexity $T(n)$:
 $
 T(n) = 2T(n/2) + O(k_i log c)
 $
-Where $k_i$ is the number of rectangles stabbed at the $i$-th level of recursion, $k_i >= 1$ and $sum_i k_i = 2n$.
-
-
+Where $k_i$ is the number of rectangles stabbed at the $i$-th level of recursion, $k_i >= 1$ and $sum_i k_i = n$.
+If we consider then $k$ to be a constant fraction of $n$ at each level, we can simplify the recurrence to:
 $
-sum_(i=0)^(log n) O(k_i log n) = O(log n) dot sum_(i=0)^(log n) O(k_i) \
-= O(log n) dot O(n) = O(n log n)
+  T = cases(
+    O(1) & "if" n = 0 \
+    2T(n/2) + O(log n) & "if" n > 0
+)
 $
 
-Combining these factors, the overall time complexity of the divide and conquer algorithm is $O(n log n)$, which meets the requirement.
+From master theorem, the overall time complexity of the divide and conquer algorithm is $O(n log n)$, which meets the requirement.
 
 *Space*: The space complexity is dominated by the segment tree, which uses $O(n log n)$. Also the recursion stack uses $O(log n)$ space a segment (stabbed rectangles are not stored as we process them immediately). Thus, the overall space complexity is still bounded to $O(n log n)$.
