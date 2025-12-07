@@ -3,9 +3,9 @@
 #set heading(numbering: "1.a")
 
 #let Conv="Conv"
+#let pc = $xor$
 
 = Minkowski Sum
-#let pc = $xor$
 Let $A pc B$ be the Minkowski sum of two sets $A, B in RR^2$, defined as $A pc B := {a + b | a in A, b in B }$.
 
 ==
@@ -150,6 +150,37 @@ Thus, we can express $P pc Conv(P) = Conv(P) xor Conv(P)$. From the theorem defi
 
 
 $square$
+
+
+*5.a.v2*
+
+_If $P$ is a simple polygon then $P xor Conv(P)$ is convex, where $Conv(P)$ is the convex hull of $P$._
+
+#let CP = $Conv(P)$
+Let'define $Q = Conv(P) pc Conv(P) = {a + b | a in CP, b in CP}$.
+Let's take a random point $q in Q$. We can express that point $q$ as the sum of two points $a in CP, b in CP$. Since #CP is convex, then also the midpoint of those two points $v = (a + b)/2$ is in #CP, therefore $exists v in CP | q = v + v$.
+
+By the definition of convex hull, we can express as the set of convex combination of two points in $P$: $CP = {lambda a + (1-lambda)b | lambda in [0, 1], a in P, b in P} $
+
+Then, we can express $v$ as $v = lambda u + (1-lambda)w$ for some $u, w in P$ and $lambda in [0, 1]$.
+
+Without loss of generality, we can consider the case where $lambda >= 1/2$. This means that $v$ will be closer to $u$ than $w$. We define now $Delta V = u - v$, such that $v + Delta V = u$, which is in $P$.
+
+We can now define a new point:$
+w' = v - Delta V = v - (u - v) = 2 v - u = (2 lambda - 1) u + 2 (1 - lambda) w,
+$
+since the sum of $2 lambda -1 $ and $2 (1 - lambda)$ is equal to 1, and both coefficients are non-negative, then $v'$ is a convex combination of $u$ and $w$, there forse it is in #CP.
+
+Hence, we can express $q$ as: $
+q = v + v = (v + Delta V) + (v - Delta V) = u + w', u in P, w' in CP.
+$
+This shows that $q in P pc CP$, therefore $CP pc CP subset.eq P pc CP$.
+
+Since $P subset.eq CP$, then $P pc CP subset.eq CP pc CP$, hence $P pc CP = CP pc CP$, which is convex.
+
+$square$
+
+
 ==
 
 _If $P$ is a simple polygon and $C$ is a disk (circle and its interior) then $P pc C$ is convex if the diameter of $C$ is at least as large as the diameter of $P$._
