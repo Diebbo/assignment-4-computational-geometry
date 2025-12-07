@@ -13,7 +13,7 @@ To solve the problem, we start by defining all the different elementary interval
 
 We denote *elementary intervals* the intervals created between two consecutive x-coordinates of rectangle edges. There are at most $2n$ such coordinates so the number of elementary intervals is $O(n)$.
 
-Next, we define a segment tree $T$ over these elementary intervals and the concept of canonical subsets. Moreover, for each node $v$ in the tree, the canonical set $S(v)$ contains all the rectangles that completely cover the interval associated with node $v$ but not contained in the interval of the parent of $v$.
+Next, we define a segment tree $T$ over these elementary intervals and the concept of canonical subsets. Moreover, for each node $v$ in the tree, the canonical set $S(v)$ contains all the rectangles that completely cover the interval associated with node $v$ but not the interval of the parent of $v$.
 
 This is not sufficient to answer the query, so we also create for each node a secondary DS $T_v$ that is a segment tree built on the y-projections of the rectangles in $S(v)$.
 
