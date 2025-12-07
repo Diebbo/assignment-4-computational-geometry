@@ -19,14 +19,10 @@ This is not sufficient to answer the query, so we also create for each node a se
 
 Let's remark that the number of nodes in the primary segment tree is $O(n)$, thus the number of canonical sets is also $O(n)$. The total size of all canonical sets is $O(n log n)$, we can verify that by thinking that each rectangle is stored in $O(log n)$ nodes of the primary segment tree.
 
-If we assume each of those $O(n log n)$ nodes has a full $O(n)$-sized secondary tree, the total space becomes $O(n^2 log n)$, which is not acceptable. To solve this problem, we can use a persistent segment tree for the secondary trees.
+We know that by construction, each interval in the primary segment tree can appear at most $2$ times in each level of the tree.
 
-Let's describe how to build the Persistent Segment Trees (PST) for each node of the primary segment tree using a sweep line algorithm:
-+ Iterate through the sorted x-coordinates. Maintain a single Segment Tree $T_Y$ over the y-coordinates.
-+ When an event is a left edge of a rectangle, perform a range update on $T_Y$ to add the rectangle's y-interval.
-+ Since we need all past states for queries, we use *Path Copying* to make $T_Y$ a Persistent Segment Tree. A range update modifies $O(log N)$ nodes, creating a new root pointer and $O(log N)$ new nodes in space.
-+ After the update at $x_k$, we store the new root of $T_Y$ as $"Root"_k$.
+Hence, we can conclude that each rectangle can also appear in $O(log n)$ secondary segment trees.
 
-Summing up, the total space is bounded by $O(n log n)$ because there're $O(n)$ events and each event creates $O(log n)$ new nodes in the PST, same as before.
+Summing up, the total space is bounded by $O(n log n)$.
 
-*Time*: Query time is the height of the primary segment tree $O(log n)$ times the query time of the secondary segment tree $O(log n)$, resulting in a total query time of $O(log^2 n)$.
+*Time*: Query time is the height of the primary segment tree $O(log n)$ times the query time of the secondary segment tree $O(log n)$ because we need to query it for each canonical sets visited in the primary tree. Resulting in a total query time of $O(log^2 n)$.
