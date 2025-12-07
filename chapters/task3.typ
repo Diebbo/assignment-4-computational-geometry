@@ -45,9 +45,9 @@ function activateNode(segmentTree node, interval delta):
   else:
     // check the children
     if delta to the left of node
-      node.span += activateNode(node.leftChild, delta)
+      node.span += activateNode(node.leftChild, delta.left)
     if delta to the right of node
-      node.span += activateNode(node.rightChild, delta)
+      node.span += activateNode(node.rightChild, delta.right)
     return node.span
 ```)<lst:propagation-segment-tree>
 
@@ -76,7 +76,7 @@ Firstly, we sort all the rectangles in ascending order based on their x-coordina
 
   We finally conclude the opening operation with a cascade update of the spans back up to the root of the tree.
 
-  Let's analyze the worst case time complexity of the opening operation. In the worst case, the maximum number of nodes we need to traverse down is bounded by the biggest subtree that covers the y-interval (see @fig:worst-case-segment-tree) in other words, the whole tree without the leftmost and rightmost paths. Moreover, from the proof of construction of the segment tree, we know that a segment can either cover an entire node or be split across its children. Thus, going down a level, the number of nodes visited is halved, as if the interval was split, one of the two children won't be visited resulting in a maximum of $4$ nodes being visited at each level.
+  Let's analyze the worst case time complexity of the opening operation. In the worst case, the maximum number of nodes we need to traverse down is bounded by the biggest subtree that covers the y-interval (see @fig:worst-case-segment-tree) in other words, the whole tree without the leftmost and rightmost paths. Moreover, from the proof of construction of the segment tree, we know that a segment can either cover an entire node or be split across its children. It's easy to show that at most two nodes per level of depth can completely cover the interval queried, without their parents also completely covering it. If the path traverse doesn't stop on a node, it will check its two children, but it will continue the path only on one of them, thus it will check at most 4 nodes per level.
 
 // set figure width to 10cm
 #figure(
@@ -84,9 +84,9 @@ Firstly, we sort all the rectangles in ascending order based on their x-coordina
     image("../assets/worst-case-segment-tree.png", width:10cm)
   )<fig:worst-case-segment-tree>
 
-  Therefore, the whole exploration of this is bounded by $O(4 log n)$.
+  Therefore, the whole exploration of this is bounded by the depth of the three: $O(log n)$.
 
-  Normally, this would not be possible as we would need to traverse all the nodes in the tree that sum up to the y-interval of the rectangle being opened. However, the optimization comes from the fact that we can use propagation to update the tree: a node's count is valid only if its count is greater than zero, moreover we don't need to check its children.
+  Normally, this would not be possible if we had to reach the leaves of the tree for every events, as we would need to traverse all the nodes in the tree that sum up to the y-interval of the rectangle being opened, resulting in a worst case of $O(n)$. However, the optimization comes from the fact that we can use propagation to update the tree: a node's count is valid only if its count is greater than zero, moreover we don't need to check its children.
 - *Closing*: Operation symmetric to the Opening, also requiring $O(log n)$ time. We only need to be aware of the case where we close a rectangle where the children are still opened by other rectangles (i.e. count > 1). In this case we still need to update the span value of the node with the sum of the spans of its children while decreasing the count.
 
 We can calculate the area covered between two consecutive events $e_i$ and $e_(i+1)$ by looking at the total height covered by the rectangles at the root of the segment tree $T$ and multiplying it by the width between the two events
@@ -129,7 +129,7 @@ function computeAreaSweep(rectangles R):
 The final step is to check that the total time complexity sums up to $O(n log n)$:
 1. Sorting the events takes $O(n log n)$ time.
 2. Processing the segment tree for each of the $2n$ events takes $O(n log n)$ time.
-3. For each event (total of $2n$), we perform an update operation on the segment tree, which takes $O(log n)$ time. Therefore resulting in a total of $O(n log n)$ time for all events.
+3. For each event of the sweep line (total of $2n$), we perform an update operation on the segment tree that takes $O(log n)$ time, therefore resulting in a total of $O(n log n)$ time for all events.
 
 Thus, the overall time complexity of the algorithm is $O(n log n)$, which meets the requirement.
 
