@@ -104,13 +104,14 @@ Lastly, let $S_(i+1)$ be the resulting graph.
 Repeat the previous steps until the only vertices left in $S_i$
 are the four vertices on the boundary of the region.
 
-Notice how each step removes at least $23 / 24 |S_i|$.
+Notice how, after each removal step, there are at most $23 / 24 |S_i|$ vertices left.
 From this fact it trivially follows that the number of steps
 will be at most $h(n) = log_(24 slash 23) |S_0| = log_(24 slash 23) n$.
 Additionally, the total storage space is bounded by the following geometric series:
 $
-  sum_(i=0)^h(n) 23/24 |S_i| <
-  sum_(i=0)^h(n) 23/24 n
+  sum_(i=0)^h(n) |S_i| <
+  sum_(i=0)^h(n) (23/24)^i |S_0| =
+  |S_0| sum_(i=0)^h(n) (23/24)^i
 $
 which converges to $O(n)$.
 
