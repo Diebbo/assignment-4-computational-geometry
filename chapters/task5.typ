@@ -14,7 +14,7 @@ _If $P$ is a simple polygon then $P xor Conv(P)$ is convex, where $Conv(P)$ is t
 
 *Solution*
 
-Let's denote $q in Q$. Therefore, we want to show that $q = lambda p' + (1 - lambda) p''$ for some $p', p'' in P$ and $lambda in [0, 1]$.
+Let $q in P xor Conv(P)$ be a point. We want to show that $q = lambda p' + (1 - lambda) p''$ for some $p', p'' in P$ and $lambda in [0, 1]$.
 
 We will denote $p' in P := a + A$ (a linear combination of a vertex of $P$ and $Q$; the upper case denotes the stronger clause of being convex) and $p'' in P := b + B$.
 
@@ -162,13 +162,15 @@ It's easy to find a counter-example to disprove the statement, as shown in @fig:
 ) <fig:counter-example-5b>
 
 The blue dashed line represents the diameter of the polygon $P$, while the green line represents the radius of the disk $C$. In the image, the radius $r$ is exactly half of the diameter $d$ of the polygon $P$, hence the diameter of the disk is the same as that of $P$. \
-The yellow region contains points that don't belong to the Minkowski sum $P pc C$, while they can be expressed as a convex combination of points that belong to the Minkowski sum, hence proving that $P pc C$ is not convex, even if the diameter of the disk is equal to or greater than the diameter of the polygon $P$.
+The yellow region contains points that don't belong to the Minkowski sum $P pc C$,
+but can be expressed as a convex combination of a point of $P$ and a point of $C$.
+The fact that the yellow region exists proves that $P pc C$ is not convex,
+even though the diameter of the disk is equal to or greater than the diameter of the polygon $P$.
 
 For a more formal proof of the general case, check exercise *5.c*.
 
 ==
 _If $P$ is a simple polygon then there exists a large enough disk such that $P pc C$ is convex._
-
 
 The statement is false.
 
@@ -277,13 +279,29 @@ canvas({
 caption: [Visualization of the counter-example]) <fig:counter-example-minkowski-disk>
 
 ==
-// For two convex polygons P and Q, the perimeter of P ⊕ Q is equal to the sum of the perimeters of P and Q.
-We start by the following observation: \
-Let $Q := P pc R$, an extreme point on $Q$ in direction $d$ is the sum of extreme points in direction $d$ on $P$ and $R$.
+_For two convex polygons $P$ and $Q$, the perimeter of $P pc Q$ is equal to the sum of the perimeters of $P$ and $Q$._
 
-An extreme can be a vertex or an edge. Hence, an extreme $q$ on $Q$ can be the sum of either two vertices or a vertex and an edge, or two edges. In the first case, $q$ would be a vertex. In the second case it would be an edge, the starting one translated by the vector of the vertex considered. When considering the third case, since the two edges must be parallel, otherwise they wouldn't be extremes in the same direction, $q$ would result in an edge, with the same length as the sum of the lengths of the considered edges.
+Let $Q := P pc R$.
 
-Hence, every edge of $Q$ either corresponds to an edge of $P$ or $R$, or is the sum of two edges of $P$ and $R$. Also, every edge in $P$ will have a corresponding edge in $Q$, and the same for $R$. \
+We start with the following observation:
+an extreme point on $Q$ in direction $d$ is the sum of
+the extreme points in direction $d$ on $P$ and $R$.
+
+An extreme can be a vertex or an edge.
+Hence, an extreme $q$ on $Q$ can be the sum of either
+two vertices, a vertex and an edge, or two edges.
+In the first case, $q$ would be a vertex.
+In the second case it would be the starting edge
+translated by the vector of the vertex considered.
+When considering the third case, since the two edges must be parallel
+(otherwise they wouldn't be extremes in the same direction),
+$q$ would result in an edge with the same length
+as the sum of the lengths of the considered edges.
+
+Hence, every edge of $Q$ either corresponds to an edge of $P$ or $R$,
+or is the sum of two edges of $P$ and $R$.
+Also, every edge in $P$ will have a corresponding edge in $Q$,
+and the same for $R$. \
 Therefore, the perimeter of $Q$ is the sum of the perimeters of $P$ and $R$.
 
 $square$
