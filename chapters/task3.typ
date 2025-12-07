@@ -241,19 +241,21 @@ The time complexity analysis of the divide and conquer algorithm is as follows:
     - Calculating the extra area added by each stabbed rectangle also takes $O(k log n)$ time in total.
 3. The depth of the recursion is $O(log n)$, as we estimate to divide the set of rectangles in half at each step.
 
-Following the formula for the total time complexity $T(n)$:
+Let's assume $h=log n$ is the height of the recursion tree. The total work done can be expressed as:
+
 $
-T(n) = 2T(n/2) + O(k_i log c)
-$
-Where $k_i$ is the number of rectangles stabbed at the $i$-th level of recursion, $k_i >= 1$ and $sum_i k_i = n$.
-If we consider then $k$ to be a constant fraction of $n$ at each level, we can simplify the recurrence to:
-$
-  T = cases(
-    O(1) & "if" n = 0 \
-    2T(n/2) + O(log n) & "if" n > 0
-)
+ T(n) = sum_(i=0)^(h-1) (O(1 + k_i log n)) = O(log n dot sum_(i=0)^(h-1) (1 + k_i))
 $
 
-From master theorem, the overall time complexity of the divide and conquer algorithm is $O(n log n)$, which meets the requirement.
+If we expand the summation on the right side we get:
+
+$
+  sum_(i=0)^(h-1) (1 + k_i) = (h + n)
+$
+
+Therefore, by substituting back we have:
+$
+ T(n) = O(log n dot (log n + n)) = O(n log n)
+$
 
 *Space*: The space complexity is dominated by the segment tree, which uses $O(n log n)$. Also the recursion stack uses $O(log n)$ space a segment (stabbed rectangles are not stored as we process them immediately). Thus, the overall space complexity is still bounded to $O(n log n)$.
