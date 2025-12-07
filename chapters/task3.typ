@@ -179,14 +179,14 @@ function computeArea(rectangles R):
     adjustSegmentTree(S, r, OPEN) 
   area += extraAreaAdded(S, r, OPEN, xm)
 
-  let L = {rectangles in R with x2 < xm}
-  area += computeArea(L)
+  let Rl = {rectangles in R with x2 < xm}
+  area += computeArea(Rl)
 
   for each rectangle r in stabbed.reversed:
     adjustSegmentTree(S, r, CLOSE)
 
-  let R = {rectangles in R with x1 > xm}
-  area += computeArea(R)
+  let Rr = {rectangles in R with x1 > xm}
+  area += computeArea(Rr)
 
   return area
 ```
