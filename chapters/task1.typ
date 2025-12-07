@@ -19,9 +19,32 @@ This is not sufficient to answer the query, so we also create for each node a se
 
 Let's remark that the number of nodes in the primary segment tree is $O(n)$, thus the number of canonical sets is also $O(n)$. The total size of all canonical sets is $O(n log n)$, we can verify that by thinking that each rectangle is stored in $O(log n)$ nodes of the primary segment tree.
 
-We know that by construction, each interval in the primary segment tree can appear at most $2$ times in each level of the tree.
+We know that by construction, each interval in both the primary and secondary segment tree can appear at most $2$ times in each level of the tree.
 
 Hence, we can conclude that each rectangle can also appear in $O(log n)$ secondary segment trees.
+
+Note that in the primary segment tree, we don't need to store the canonical set list explicitly as I just need to store the cardinality of the canonical set, which is $O(1)$ space.
+
+#figure(
+caption: ["Segment tree query"],
+```pseudo
+function primaryQuery(SegmentTreeNode v, Point q):
+if v = Null
+  return 0
+if q in v.interval:
+  return secondaryQuery(v.ytree, q) + StabX(v.left, q)
+else
+  return StabY(v.ytree, q) + +StabX(v.right, q)
+
+function secondaryQuery(SegmentTreeNode w, q):
+if w = Null
+  return 0
+if q in w.interval:
+  return w.size + StabY(v.down, q)
+else
+  return w.size + StabY(v.up, q)
+```
+)<lst:segment-tree-query>
 
 Summing up, the total space is bounded by $O(n log n)$.
 
