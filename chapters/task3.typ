@@ -15,7 +15,7 @@ How to find the union of the areas of the $n$ rectangles in $O(n log n)$ time?
 
 ==== Propagation Segment Tree
 
-Given a segment tree $T$, we can augment it to support propagation for range updates. Given a  range update operation that add a tag on a node to denote that it's been open we can assume the propagation effects the children of the node as well (see @fig:propagation-segment-tree-update).
+Given a segment tree $T$, we can augment it to support propagation for range updates. If a range update operation adds a tag on a node to denote that it's been open, we can assume that the propagation affects the children of the node as well (see @fig:propagation-segment-tree-update).
 
 #figure(
   caption: [Propagation Segment Tree Update],
@@ -158,8 +158,8 @@ For the y-intervals, we will use a segment tree $S$ augmented that also uses pro
 - The rightmost and leftmost coordinates of the x-interval of the last rectangle we used to update the node. This is needed to correctly add the extra area covered by a new rectangle being opened that extends beyond the previous one.
 
 
-Let's now brake down the algorithm (see @lst:divide-and-conquer-area-computation for pseudocode):
-The implementation is a recursive function `computeArea(R)` that takes as the set of rectangles. 
+Let's now break down the algorithm (see @lst:divide-and-conquer-area-computation for pseudocode):
+The implementation is a recursive function `computeArea(R)` that takes as input the set of rectangles.
 
 If there're any rectangles in the set, we find the median x-coordinate $x_m$ and query the interval tree $T$ to find all rectangles stabbed by the vertical line $x = x_m$. The query will return the result in both ascending and descending order based on the closing and opening x-coordinates respectively (accessed by `stabbed` and `stabbed.reversed` in the pseudocode).
 

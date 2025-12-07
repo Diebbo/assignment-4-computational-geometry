@@ -71,7 +71,8 @@ of locating a point on a planar graph.
 There exist various solutions to the point location problem
 for finite planar subdivisions that use $O(log n)$ time and $O(n)$ space.
 Since it seemed to us like the simplest,
-we chose to use the _triangulation refinement_ algorithm@kirkpatrick83.
+we chose to use the _triangulation refinement_ algorithm @kirkpatrick83.
+Before describing the algorithm, we need the following lemma.
 
 #lemma[
   For every planar graph with $n >= 3$ vertices it is possible
@@ -86,8 +87,10 @@ we chose to use the _triangulation refinement_ algorithm@kirkpatrick83.
   with weight not exceeding 11.
   Then, a simple algorithm can remove all of the vertices
   that are adjacent to another vertex already in the set.
+  $square$
 ] <lemma:find-independent>
 
+Now we can start with the description of the algorithm.
 The first step is to run a polygon
 triangulation algorithm for each of the regions.
 Let $S_0$ be the resulting graph.
