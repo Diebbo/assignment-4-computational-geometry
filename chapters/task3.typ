@@ -33,7 +33,7 @@ Let's analyze how to implement the propagation for our segment tree (see @lst:pr
 function activateNode(segmentTree node, interval delta):
   check node is not a leaf
 
-  if delta in n.span:
+  if n.span fully covers delta:
     // increment the count of active rectangles
     if node.count == 0:
       node.count += 1
@@ -49,7 +49,6 @@ function activateNode(segmentTree node, interval delta):
     if delta to the right of node
       node.span += activateNode(node.rightChild, delta)
     return node.span
-
 ```)<lst:propagation-segment-tree>
 
 Of course, we can implement a symmetric function `deactivateNode` to close rectangles in the segment tree.
@@ -160,7 +159,11 @@ For the y-intervals, we will use a segment tree $S$ augmented that also uses pro
 
 
 Let's now brake down the algorithm (see @lst:divide-and-conquer-area-computation for pseudocode):
-The implementation is a recursive function `computeArea(R)` that takes as the set of rectangles. We will assume that the rectangles are sortedas it will not influence our computation time and that you can find the boundary in time $O(1)$ as the rectangles are sorted by their x-coordinates.
+The implementation is a recursive function `computeArea(R)` that takes as the set of rectangles. 
+
+If there're any rectangles in the set, we find the median x-coordinate $x_m$ and query the interval tree $T$ to find all rectangles stabbed by the vertical line $x = x_m$. The query will return the result in both ascending and descending order based on the closing and opening x-coordinates respectively (accessed by `stabbed` and `stabbed.reversed` in the pseudocode).
+
+The key observation is that once we compute the area contributed by the rectangles stabbed by the median line, we can safely remove them from the set of rectangles and consider their boundary as the new boundaries for the left and right recursive calls.
 
 #figure(
 caption: [Divide and Conquer Area Computation],
