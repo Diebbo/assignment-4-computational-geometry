@@ -244,7 +244,7 @@ The time complexity analysis of the divide and conquer algorithm is as follows:
 Let's assume $h=log n$ is the height of the recursion tree. The total work done can be expressed as:
 
 $
- T(n) = sum_(i=0)^(h-1) (O(1 + k_i log n)) = O(log n dot sum_(i=0)^(h-1) (1 + k_i))
+ T(n) = sum_(i=0)^(h-1) (O(1 + k_i) log n) = O(log n dot sum_(i=0)^(h-1) (1 + k_i))
 $
 
 If we expand the summation on the right side we get:
