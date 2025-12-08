@@ -239,7 +239,7 @@ The time complexity analysis of the divide and conquer algorithm is as follows:
     - Querying the interval tree to find stabbed rectangles takes $O(log n + k)$ time, where $k$ is the number of stabbed rectangles.
     - Adjusting the segment tree for each stabbed rectangle takes $O(k log n)$ time in total.
     - Calculating the extra area added by each stabbed rectangle also takes $O(k log n)$ time in total.
-3. The depth of the recursion is $O(log n)$, as we estimate to divide the set of rectangles in half at each step.
+3. The depth of the recursion is $O(log n)$, as we estimate to divide the set of rectangles in half at each step, recurring to the next step with two subsets of cardinality at most the half of the current one.
 
 Let's assume $h=log n$ is the height of the recursion tree. The total work done can be expressed as:
 
