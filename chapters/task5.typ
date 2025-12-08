@@ -80,8 +80,6 @@ _If $P$ is a simple polygon then $P xor Conv(P)$ is convex, where $Conv(P)$ is t
 // )<fig:concavity-separation>
 
 
-_If $P$ is a simple polygon then $P xor Conv(P)$ is convex, where $Conv(P)$ is the convex hull of $P$._
-
 #let CP = $Conv(P)$
 Let $Q = Conv(P) pc Conv(P) = {a + b | a in CP, b in CP}$.
 Take a random point $q in Q$.
